@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alice.zhaizhai.mapper.AddressBookMapper">
+    <!--
+两个一致：
+1.mapper接口的全类名和映射文件的namespace要一一致
+2.mapper接口的方法名要和映射文件中的sql的id保持一致
+-->
+
+    <!--
+resultType：设置结果类型，即查询的数据要转换为哪种数据类型
+resultMap：自定义映射，用来处理多对一或者一对多的映射，
+-->
+
+    <!--List<AddressBook> selectListByUserId();-->
+    <select id="selectListByUserId" resultType="addressbook">
+        select *
+        from address_book
+        where user_id = #{uid}
+    </select>
+
+
+    <!--void insert(AddressBook addressBook);-->
+    <insert id="insert">
+        insert into address_book(user_id, consignee, phone, sex, detail, label, create_time, update_time, create_user, update_user
+            <if test="provinceCode != null">
+                , province_code
+            </if>
+            <if test="provinceName != null">
+                , province_name
+            </if>
+            <if test="cityCode != null">
+                , city_code
+            </if>
+            <if test="cityName != null">
+                , city_name
+            </if>
+            <if test="districtCode != null">
+                , district_code
+            </if>
+            <if test="districtName != null">
+                , district_name
+            </if>
+            <if test="isDefault != null">
+                , is_default
+            </if>
+            <if test="isDeleted != null">
+                , is_deleted
+            </if>
+        ) value (#{userId}, #{consignee}, #{phone}, #{sex}, #{detail}, #{label} , #{createTime}, #{updateTime}, #{createUser}, #{updateUser}
+            <if test="provinceCode != null">
+                , #{provinceCode}
+            </if>
+            <if test="provinceName != null">
+                , #{provinceName}
+            </if>
+            <if test="cityCode != null">
+                , #{cityCode}
+            </if>
+            <if test="cityName != null">
+                , #{cityName}
+            </if>
+            <if test="districtCode != null">
+                , #{districtCode}
+            </if>
+            <if test="districtName != null">
+                , #{districtName}
+            </if>
+            <if test="isDefault != null">
+                , #{isDefault}
+            </if>
+            <if test="isDeleted != null">
+                , #{isDeleted}
+            </if>
+        )
+    </insert>
+
+<!--AddressBook selectById(Long id);-->
+    <select id="selectById" resultType="addressBook">
+        select * from address_book where id = #{id}
+    </select>
+
+<!--void updateById(AddressBook addressBook);-->
+    <update id="updateById">
+        update address_book set user_id = #{userId}, consignee = #{consignee}, phone = #{phone}, sex = #{sex}, detail = #{detail}, label = #{label}, create_time = #{createTime}, update_time = #{updateTime}, create_user = #{createUser}, update_user = #{updateUser}
+            <if test="provinceCode != null">
+                ,province_code = #{provinceCode}
+            </if>
+            <if test="provinceName != null">
+                , province_name = #{provinceName}
+            </if>
+            <if test="cityCode != null">
+                , city_code = #{cityCode}
+            </if>
+            <if test="cityName != null">
+                , city_name = #{cityName}
+            </if>
+            <if test="districtCode != null">
+                , city_name = #{districtCode}
+            </if>
+            <if test="districtName != null">
+                , district_name = #{districtName}
+            </if>
+            <if test="isDefault != null">
+                , is_default = #{isDefault}
+            </if>
+            <if test="isDeleted != null">
+                , is_deleted = #{isDeleted}
+            </if>
+        where id = #{id}
+    </update>
+
+<!--void updateNotDefault(Long userId);-->
+    <update id="updateNotDefault">
+        update address_book set is_default = 0 where user_id = #{uid}
+    </update>
+
+
+<!--void updateDefault(Long userId, Long addressBookId);-->
+    <update id="updateDefault">
+        update address_book set is_default = 1 where id = #{id}
+    </update>
+
+
+<!--void delete(Long id);-->
+    <delete id="delete">
+        delete from address_book where id = #{id}
+    </delete>
+
+
+
+<!--AddressBook getDefaultByUserId(Long userId);-->
+    <select id="getDefaultByUserId" resultType="addressbook">
+        select * from address_book where user_id = #{uid} and is_default = 1
+    </select>
+
+
+</mapper>

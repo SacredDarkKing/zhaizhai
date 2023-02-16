@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alice.zhaizhai.mapper.SetmealDishMapper">
+    <!--
+两个一致：
+1.mapper接口的全类名和映射文件的namespace要一一致
+2.mapper接口的方法名要和映射文件中的sql的id保持一致
+-->
+
+    <!--
+resultType：设置结果类型，即查询的数据要转换为哪种数据类型
+resultMap：自定义映射，用来处理多对一或者一对多的映射，
+-->
+    <!--void insert(SetmealDish setmealDish);-->
+    <insert id="insert">
+        insert into setmeal_dish(
+        <trim prefixOverrides=",">
+            <if test="setmealId != null">
+                , setmeal_id
+            </if>
+            <if test="dishId != null">
+                , dish_id
+            </if>
+            <if test="name != null">
+                , name
+            </if>
+            <if test="price != null">
+                , price
+            </if>
+            <if test="copies != null">
+                , copies
+            </if>
+            <if test="sort != null">
+                , sort
+            </if>
+            <if test="createTime != null">
+                , create_time
+            </if>
+            <if test="updateTime != null">
+                , update_time
+            </if>
+            <if test="createUser != null">
+                , create_user
+            </if>
+            <if test="updateUser != null">
+                , update_user
+            </if>
+            <if test="isDeleted != null">
+                , is_deleted
+            </if>
+        </trim>
+        ) value(
+        <trim prefixOverrides=",">
+            <if test="setmealId != null">
+                , #{setmealId}
+            </if>
+            <if test="dishId != null">
+                , #{dishId}
+            </if>
+            <if test="name != null">
+                , #{name}
+            </if>
+            <if test="price != null">
+                , #{price}
+            </if>
+            <if test="copies != null">
+                , #{copies}
+            </if>
+            <if test="sort != null">
+                , #{sort}
+            </if>
+            <if test="createTime != null">
+                , #{createTime}
+            </if>
+            <if test="updateTime != null">
+                , #{updateTime}
+            </if>
+            <if test="createUser != null">
+                , #{createUser}
+            </if>
+            <if test="updateUser != null">
+                , #{updateUser}
+            </if>
+            <if test="isDeleted != null">
+                , #{isDeleted}
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <!--List<SetmealDish> selectListBySetmealId(Long setmealId);-->
+    <select id="selectListBySetmealId" resultType="setmealdish">
+        select *
+        from setmeal_dish
+        where setmeal_id = #{sid}
+    </select>
+
+    <!--void deleteBySetmealId(Long setmealId);-->
+    <delete id="deleteBySetmealId">
+        delete
+        from setmeal_dish
+        where setmeal_id = #{sid}
+    </delete>
+
+    <!--Long countByDishId(Long dishId);-->
+    <select id="countByDishId" resultType="Long">
+        select count(dish_id)
+        from setmeal_dish
+        where dish_id = #{did}
+    </select>
+
+</mapper>

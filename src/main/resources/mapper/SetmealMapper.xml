@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alice.zhaizhai.mapper.SetmealMapper">
+    <!--
+两个一致：
+1.mapper接口的全类名和映射文件的namespace要一一致
+2.mapper接口的方法名要和映射文件中的sql的id保持一致
+-->
+
+    <!--
+resultType：设置结果类型，即查询的数据要转换为哪种数据类型
+resultMap：自定义映射，用来处理多对一或者一对多的映射，
+-->
+
+    <!--List<Setmeal> selectListByCategoryId(Long categoryId);-->
+    <select id="selectListByCategoryId" resultType="setmeal">
+        select *
+        from setmeal
+        where category_id = #{cid}
+          and is_deleted = 0
+    </select>
+
+
+    <!--List<SetmealDto> selectSetmealDtoListLikeName(String name);-->
+    <select id="selectSetmealDtoListLikeName" resultType="com.alice.zhaizhai.dto.SetmealDto">
+        select setmeal.*, category.name categoryName from setmeal, category where setmeal.category_id = category.id and
+        is_deleted = 0
+        <if test="name != null">
+            and name like concat('%', #{name}, '%')
+        </if>
+    </select>
+
+    <!--void insert(Setmeal setmeal);-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal(
+        <trim prefixOverrides=",">
+            <if test="categoryId != null">
+                , category_id
+            </if>
+            <if test="name != null">
+                , name
+            </if>
+            <if test="price != null">
+                , price
+            </if>
+            <if test="status != null">
+                , status
+            </if>
+            <if test="code != null">
+                , code
+            </if>
+            <if test="description != null">
+                , description
+            </if>
+            <if test="image != null">
+                , image
+            </if>
+            <if test="createTime != null">
+                , create_time
+            </if>
+            <if test="updateTime != null">
+                , update_time
+            </if>
+            <if test="createUser != null">
+                , create_user
+            </if>
+            <if test="updateUser != null">
+                , update_user
+            </if>
+            <if test="isDeleted != null">
+                , is_deleted
+            </if>
+        </trim>
+        ) value(
+        <trim prefixOverrides=",">
+            <if test="categoryId != null">
+                , #{categoryId}
+            </if>
+            <if test="name != null">
+                , #{name}
+            </if>
+            <if test="price != null">
+                , #{price}
+            </if>
+            <if test="status != null">
+                , #{status}
+            </if>
+            <if test="code != null">
+                , #{code}
+            </if>
+            <if test="description != null">
+                , #{description}
+            </if>
+            <if test="image != null">
+                , #{image}
+            </if>
+            <if test="createTime != null">
+                , #{createTime}
+            </if>
+            <if test="updateTime != null">
+                , #{updateTime}
+            </if>
+            <if test="createUser != null">
+                , #{createUser}
+            </if>
+            <if test="updateUser != null">
+                , #{updateUser}
+            </if>
+            <if test="isDeleted != null">
+                , #{isDeleted}
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <resultMap id="setmealDtoMap" type="com.alice.zhaizhai.dto.SetmealDto">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="code" property="code"/>
+        <result column="description" property="description"/>
+        <result column="image" property="image"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <collection property="setmealDishes"
+                    select="com.alice.zhaizhai.mapper.SetmealDishMapper.selectListBySetmealId" column="id"/>
+    </resultMap>
+
+
+    <!--SetmealDto selectSetmealDtoById(Long id);-->
+    <select id="selectSetmealDtoById" resultMap="setmealDtoMap">
+        select *
+        from setmeal
+        where id = #{id}
+    </select>
+
+
+    <!--void update(Setmeal setmeal);-->
+    <update id="update">
+        update setmeal set
+        <trim prefixOverrides=",">
+            <if test="categoryId != null">
+                , category_id = #{categoryId}
+            </if>
+            <if test="name != null">
+                , name = #{name}
+            </if>
+            <if test="price != null">
+                , price = #{price}
+            </if>
+            <if test="status != null">
+                , status = #{status}
+            </if>
+            <if test="code != null">
+                , code = #{code}
+            </if>
+            <if test="description != null">
+                , description = #{description}
+            </if>
+            <if test="image != null">
+                , image = #{image}
+            </if>
+            <if test="createTime != null">
+                , create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                ,update_time = #{updateTime}
+            </if>
+            <if test="createUser != null">
+                , create_user = #{createUser}
+            </if>
+            <if test="updateUser != null">
+                , update_user = #{updateUser}
+            </if>
+            <if test="isDeleted != null">
+                , is_deleted = #{isDeleted}
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+
+    <!--Setmeal selectById(Long id);-->
+    <select id="selectById" resultType="setmeal">
+        select *
+        from setmeal
+        where id = #{id}
+    </select>
+
+
+    <!--List<Setmeal> selectListByCondition(Setmeal setmeal);-->
+    <select id="selectListByCondition" resultType="setmeal">
+        select * from setmeal
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="code != null">
+                and code = #{code}
+            </if>
+            <if test="description != null">
+                and description = #{description}
+            </if>
+            <if test="image != null">
+                and image = #{image}
+            </if>
+            <if test="isDeleted != null">
+                and is_deleted = #{isDeleted}
+            </if>
+        </where>
+    </select>
+
+<!--List<Map> selectDishListById(Long id);-->
+    <select id="selectDishListById" resultType="map">
+        select dish.*, setmeal_dish.copies from setmeal_dish, dish where setmeal_id = #{id} and setmeal_dish.dish_id = dish.id
+    </select>
+
+
+</mapper>

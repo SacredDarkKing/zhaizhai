@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alice.zhaizhai.mapper.ShoppingCartMapper">
+    <!--
+两个一致：
+1.mapper接口的全类名和映射文件的namespace要一一致
+2.mapper接口的方法名要和映射文件中的sql的id保持一致
+-->
+
+    <!--
+resultType：设置结果类型，即查询的数据要转换为哪种数据类型
+resultMap：自定义映射，用来处理多对一或者一对多的映射，
+-->
+
+    <!--List<ShoppingCart> selectListByUserId(Long userId);-->
+    <select id="selectListByUserId" resultType="shoppingcart">
+        select *
+        from shopping_cart
+        where user_id = #{userId} order by create_time desc
+    </select>
+
+    <!--void insert(ShoppingCart shoppingCart);-->
+    <insert id="insert">
+        insert into shopping_cart( name, user_id, amount, number
+        <if test="dishId != null">
+            ,dish_id
+        </if>
+        <if test="setmealId != null">
+            , setmeal_id
+        </if>
+        <if test="dishFlavor != null">
+            , dish_flavor
+        </if>
+        <if test="image != null">
+            , image
+        </if>
+        <if test="createTime != null">
+            , create_time
+        </if>
+        ) value (#{name}, #{userId}, #{amount}, #{number}
+        <if test="dishId != null">
+            , #{dishId}
+        </if>
+        <if test="setmealId != null">
+            , #{setmealId}
+        </if>
+        <if test="dishFlavor != null">
+            , #{dishFlavor}
+        </if>
+        <if test="image != null">
+            , #{image}
+        </if>
+        <if test="createTime != null">
+            , #{createTime}
+        </if>
+        )
+    </insert>
+
+
+    <!--ShoppingCart selectOneByCondition(ShoppingCart shoppingCart);-->
+    <select id="selectOneByCondition" resultType="shoppingcart">
+        select * from shopping_cart
+        <where>
+            user_id = #{userId}
+            <choose>
+                <when test="id != null">
+                    and id = #{id}
+                </when>
+                <otherwise>
+                    <if test="dishId != null">
+                        and dish_id = #{dishId}
+                        <if test="dishFlavor != null">
+                            and dish_flavor = #{dishFlavor}
+                        </if>
+                    </if>
+                    <if test="setmealId != null">
+                        and setmeal_id = #{setmealId}
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <!--Integer selectNumber(ShoppingCart shoppingCart);-->
+    <select id="selectNumber" resultType="int">
+        select sum(number)
+        from shopping_cart
+        <where>
+            user_id = #{userId}
+            <if test="dishId != null">
+                and dish_id = #{dishId}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <!--void update(ShoppingCart shoppingCart);-->
+    <update id="update">
+        update shopping_cart
+        set number      = #{number},
+            create_time = #{createTime}
+        where id = #{id}
+    </update>
+
+
+    <!--void deleteById(Long id);-->
+    <delete id="deleteById">
+        delete
+        from shopping_cart
+        where id = #{id}
+    </delete>
+
+
+    <!--void deleteByUserId(Long userId);-->
+    <delete id="deleteByUserId">
+        delete
+        from shopping_cart
+        where user_id = #{uid}
+    </delete>
+</mapper>

@@ -1,0 +1,36 @@
+#todo: 部署需要修改数据库密码、图片存放位置、并且将图片打包发送至服务器
+server:
+  port: 8080
+spring:
+  application:
+    name: zhaizhai
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${db.username}
+      password: ${db.password}
+  config:
+    import: classpath:secret.yml
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.alice.zhaizhai.pojo
+
+zhaizhai:
+  base-path: /alice/workspace/
+  img-path: ${zhaizhai.base-path}imgs/
+#  base-path: E:\My_Code_Space\File\zhaizhai\
+
+tencent-cloud:
+  sms:
+    secret-id: ${sms.secret-id}
+    secret-key: ${sms.secret-key}
+    sdk-app-id: ${sms.sdk-app-id}
+    sign-name: ${sms.sign-name}
+    template-id: ${sms.template-id}
+
+

@@ -13,7 +13,6 @@ spring:
   config:
     import: classpath:secret.yml
   redis:
-#    host: 127.0.0.1
     host: 1.15.142.160
     password: ${db.redis.password}
     port: 6379
@@ -35,8 +34,8 @@ mybatis:
 
 zhaizhai:
   base-path: /alice/workspace/
-  img-path: ${zhaizhai.base-path}imgs/
 #  base-path: E:\My_Code_Space\File\zhaizhai\
+  img-path: ${zhaizhai.base-path}imgs/
 
 tencent-cloud:
   sms:

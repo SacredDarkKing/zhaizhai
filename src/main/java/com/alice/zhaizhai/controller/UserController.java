@@ -8,6 +8,7 @@ import com.alice.zhaizhai.utils.ValidateCodeUtils;
 import com.github.pagehelper.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author dark_code_king
@@ -28,6 +30,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 //    @Autowired
 //    private ValidateCodeUtils validateCodeUtils;
     //todo: 管理端控制器的数据接收校验
@@ -36,16 +41,16 @@ public class UserController {
     private SMSUtils smsUtils;
 
     @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session) {
+    public R<String> sendMsg(@RequestBody User user) {
         String phone = user.getPhone();
         if (StringUtil.isNotEmpty(phone)) {
             String code = ValidateCodeUtils.getCode(4);
             log.info("手机号{}申请发送验证码：{}", phone, code);
 
-            //将code保存到session，用于校验
-            session.setAttribute("code", code);
+            //将code保存到redis，用于校验，并将时间设置为3分钟
+            stringRedisTemplate.opsForValue().set(phone, code, 3, TimeUnit.MINUTES);
             //todo: 正式部署需要打开短信发送
-            smsUtils.sendSMS(code, 24, phone);
+            //smsUtils.sendSMS(code, 3, phone);
             return R.success(code);
         }
 
@@ -57,18 +62,18 @@ public class UserController {
     public R<User> login(@RequestBody Map<String, String> map, HttpSession session) {
         String inputCode = map.get("code");
         String phone = map.get("phone");
-        Object code = session.getAttribute("code");
 
+        if (StringUtil.isEmpty(phone))
+            return R.error("手机号错误");
+
+        //从redis中取出验证码
+        String code = stringRedisTemplate.opsForValue().get(phone);
         //未发送验证码
         if (code == null)
             return R.error("请发送验证码");
 
-        //传递的数据出错
-        if (StringUtil.isEmpty(phone) || StringUtil.isEmpty(inputCode))
-            return R.error("数据错误");
-
         //验证码不对
-        if (!inputCode.equals(code))
+        if (StringUtil.isEmpty(inputCode) || !inputCode.equals(code))
             return R.error("验证码错误");
 
         //获取用户信息
@@ -92,6 +97,9 @@ public class UserController {
 
         //用户不为空，且账户未被禁用，将用户id保存到session，返回登录成功
         session.setAttribute("user", user.getId());
+
+        //todo:登陆成功之后删除验证码
+        stringRedisTemplate.delete(phone);
 
         return R.success(user);
     }

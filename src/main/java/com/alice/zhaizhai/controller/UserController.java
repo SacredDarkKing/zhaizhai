@@ -50,7 +50,7 @@ public class UserController {
             //将code保存到redis，用于校验，并将时间设置为3分钟
             stringRedisTemplate.opsForValue().set(phone, code, 3, TimeUnit.MINUTES);
             //todo: 正式部署需要打开短信发送
-            //smsUtils.sendSMS(code, 3, phone);
+            smsUtils.sendSMS(code, 3, phone);
             return R.success("发送成功");
         }
 

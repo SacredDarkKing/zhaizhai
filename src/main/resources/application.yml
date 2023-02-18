@@ -31,11 +31,8 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.alice.zhaizhai.pojo
 
-
 zhaizhai:
-  base-path: /alice/workspace/
-#  base-path: E:\My_Code_Space\File\zhaizhai\
-  img-path: ${zhaizhai.base-path}imgs/
+  img-path: ${base-path}imgs/
 
 tencent-cloud:
   sms:

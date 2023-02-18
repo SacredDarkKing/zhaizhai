@@ -8,10 +8,22 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://127.0.0.1:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${db.username}
-      password: ${db.password}
+      username: ${db.mysql.username}
+      password: ${db.mysql.password}
   config:
     import: classpath:secret.yml
+  redis:
+#    host: 127.0.0.1
+    host: 1.15.142.160
+    password: ${db.redis.password}
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8 # 最大连接数
+        max-wait: 1ms # 连接池最大阻塞等待时间
+        max-idle: 4 # 连接池中最大空闲连接
+        min-idle: 0 # 连接池中最小空闲连接
 
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
@@ -19,6 +31,7 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.alice.zhaizhai.pojo
+
 
 zhaizhai:
   base-path: /alice/workspace/

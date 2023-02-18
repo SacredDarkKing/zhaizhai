@@ -51,7 +51,7 @@ public class UserController {
             stringRedisTemplate.opsForValue().set(phone, code, 3, TimeUnit.MINUTES);
             //todo: 正式部署需要打开短信发送
             //smsUtils.sendSMS(code, 3, phone);
-            return R.success(code);
+            return R.success("发送成功");
         }
 
         return R.error("发送失败");

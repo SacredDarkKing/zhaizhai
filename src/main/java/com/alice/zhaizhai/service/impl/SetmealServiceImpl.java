@@ -11,6 +11,8 @@ import com.alice.zhaizhai.service.SetmealService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,7 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDishService setmealDishService;
 
     @Override
+    @Cacheable(value = "setmeal", key = "#categoryId", unless = "#result == null")
     public List<Setmeal> getList(Long categoryId) {
         return setmealMapper.selectListByCategoryId(categoryId);
     }
@@ -50,6 +53,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmeal", key = "#setmeal.categoryId")
     public void saveWithDishes(SetmealDto setmealDto) {
         this.saveSetmeal(setmealDto);
         Long setmealId = setmealDto.getId();
@@ -69,6 +73,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmeal", key = "#setmeal.categoryId")
     public void updateWihtDishes(SetmealDto setmealDto) {
         setmealMapper.update(setmealDto);
         Long setmealId = setmealDto.getId();
@@ -83,6 +88,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmeal", allEntries = true)
     public void updateStatusBatch(Integer status, List<Long> ids) {
         Setmeal setmeal = new Setmeal();
         setmeal.setStatus(status);
@@ -95,6 +101,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmeal", allEntries = true)
     public void deleteBatch(List<Long> ids) {
         //逻辑删除
         //需要套餐为停售状态
@@ -112,6 +119,7 @@ public class SetmealServiceImpl implements SetmealService {
     }
 
     @Override
+    @Cacheable(value = "setmeal", key = "#setmeal.categoryId", unless = "#result == null")
     public List<Setmeal> getList(Setmeal setmeal) {
         return setmealMapper.selectListByCondition(setmeal);
     }

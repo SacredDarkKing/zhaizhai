@@ -7,13 +7,13 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://${host.mysql}:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://${db.mysql.host}:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${db.mysql.username}
       password: ${db.mysql.password}
   config:
     import: classpath:secret.yml
   redis:
-    host: ${host.redis}
+    host: ${db.redis.host}
     password: ${db.redis.password}
     port: 6379
     database: 0

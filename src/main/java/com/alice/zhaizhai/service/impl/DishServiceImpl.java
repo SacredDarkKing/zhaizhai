@@ -12,13 +12,12 @@ import com.alice.zhaizhai.service.SetmealDishService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author dark_code_king
@@ -36,26 +35,23 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private SetmealDishService setmealDishService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
+    /**
+     * 获取List需要缓存：
+     * 如果redis中有，直接返回，
+     * 如果redis中没有，再查询数据库，并将这次查询结果缓存，
+     * 此外，如果数据库的数据被修改，则需要清空缓存
+     *
+     * @param dish
+     * @return
+     */
     @Override
+    @Cacheable(value = "dish", key = "#dish.categoryId", unless = "#result == null")
     public List<DishDto> getList(Dish dish) {
-        //菜品查询先从缓存获取，如果缓存没有在查数据库
-        String key = "dish_" + dish.getCategoryId();
-        List<DishDto> dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
-        if (dishDtoList != null)
-            return dishDtoList;
-
-        //redis中没有，再查询数据库，并将这次查询结果缓存
-        //此外，如果数据库的数据被修改，则需要清空缓存
-        dishDtoList = dishMapper.selectDishDtoListByCondition(dish);
-        redisTemplate.opsForValue().set(key, dishDtoList, 60, TimeUnit.MINUTES);
-
-        return dishDtoList;
+        return dishMapper.selectDishDtoListByCondition(dish);
     }
 
     @Override
+    @Cacheable(value = "dish", key = "#categoryId", unless = "#result == null")
     public List<DishDto> getList(Long categoryId) {
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
@@ -72,14 +68,15 @@ public class DishServiceImpl implements DishService {
     @Override
     public void saveDish(Dish dish) {
         dishMapper.insert(dish);
-        //新增菜品之后需要清除缓存
-        Long categoryId = dishMapper.selectById(dish.getId()).getCategoryId();
-        String key = "dish_" + categoryId;
-        redisTemplate.delete(key);
     }
 
+    /**
+     * 新增菜品之后需要清除缓存
+     * @param dishDto
+     */
     @Override
     @Transactional
+    @CacheEvict(value = "dish", key = "#dish.categoryId")
     public void saveWithFlavors(DishDto dishDto) {
         this.saveDish(dishDto);
         Long dishId = dishDto.getId();
@@ -99,15 +96,16 @@ public class DishServiceImpl implements DishService {
     @Override
     public void updateDish(Dish dish) {
         dishMapper.update(dish);
-        //修改菜品之后需要清除缓存
-        String key = "dish_" + dish.getCategoryId();
-        redisTemplate.delete(key);
-
-        //todo 同时也需要清除所有的套餐缓存，因为套餐可能包含了这个菜品
     }
 
+    /**
+     * 修改菜品之后需要清所有除缓存,
+     * 同时也需要清除所有的套餐缓存，因为套餐可能包含了这个菜品
+     * @param dishDto
+     */
     @Override
     @Transactional
+    @CacheEvict(value = {"dish", "setmeal"}, allEntries = true)
     public void updateWithFlavors(DishDto dishDto) {
         this.updateDish(dishDto);
         List<DishFlavor> flavors = dishDto.getFlavors();
@@ -125,6 +123,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dish", "setmeal"}, allEntries = true)
     public void updateStatusBatch(Integer status, List<Long> ids) {
         Dish dish = new Dish();
         dish.setStatus(status);
@@ -137,9 +136,9 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"dish", "setmeal"}, allEntries = true)
     public void deleteBatch(List<Long> ids) {
         //删除是逻辑删除，就是将isdeleted字段设置为1
-        //由于此处的删除是逻辑删除，使用的是update，所以缓存直接使用的是update方法的清除
         Dish dish = new Dish();
         dish.setIsDeleted(1);
 

@@ -260,6 +260,7 @@
 }
 
 #main .divBody .divMenu .divItem .divNum .divTypes .redPoint {
+    font-family: DIN, DIN-Medium;
     width: auto;
     min-width: 18rem;
     height: 18rem;
@@ -361,6 +362,7 @@
 }
 
 #main .divCart .divGoodsNum {
+    font-family: DIN, DIN-Medium;
     width: 18rem;
     height: 18rem;
     opacity: 1;

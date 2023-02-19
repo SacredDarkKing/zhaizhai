@@ -85,6 +85,7 @@
 #order .divBody .item .dishList {
     padding-top: 10rem;
     padding-bottom: 11rem;
+    font-family: DIN, DIN-Medium;
 }
 
 #order .divBody .item .dishList .item {
@@ -134,6 +135,7 @@
     text-align: left;
     color: #666666;
     line-height: 20rem;
+    font-family: DIN, DIN-Medium;
 }
 
 #order .divBody .item .result .price {

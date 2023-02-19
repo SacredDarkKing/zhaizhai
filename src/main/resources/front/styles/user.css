@@ -166,6 +166,7 @@
 #user .divOrders .dishList {
     padding-top: 10rem;
     padding-bottom: 11rem;
+    font-family: DIN, DIN-Medium;
 }
 
 #user .divOrders .dishList .item {
@@ -233,6 +234,7 @@
     text-align: left;
     color: #666666;
     line-height: 20rem;
+    font-family: DIN, DIN-Medium;
 }
 
 #user .divOrders .result .price {

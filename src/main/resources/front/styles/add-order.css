@@ -317,6 +317,7 @@
 }
 
 #add_order .divCart .divGoodsNum {
+  font-family: DIN, DIN-Medium;
   width: 18rem;
   height: 18rem;
   opacity: 1;

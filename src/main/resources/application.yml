@@ -4,14 +4,34 @@ server:
 spring:
   application:
     name: zhaizhai
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://${db.mysql.host}:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${db.mysql.username}
-      password: ${db.mysql.password}
   config:
     import: classpath:secret.yml
+  main:
+    allow-bean-definition-overriding: true
+  shardingsphere:
+    datasource:
+      names:
+        master, slave1
+      master:
+        url: jdbc:mysql://${db.mysql.master.host}:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        username: ${db.mysql.master.username}
+        password: ${db.mysql.master.password}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+      slave1:
+        url: jdbc:mysql://${db.mysql.slave1.host}:3306/zhaizhai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        username: ${db.mysql.slave1.username}
+        password: ${db.mysql.slave1.password}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+    masterslave:
+      load-balance-algorithm-type: ROUND_ROBIN # 轮询
+      name: dataSource
+      master-data-source-name: master
+      slave-data-source-names: slave1
+    props:
+      sql:
+        show: true #开启sql显示
   redis:
     host: ${db.redis.host}
     password: ${db.redis.password}

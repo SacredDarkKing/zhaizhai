@@ -1,7 +1,7 @@
 var web_prefix = '/front'
 
 function imgPath(path){
-    return '/common/download?name=' + path
+    return '/zhaizhai/common/download?name=' + path
 }
 
 //将url传参转换为数组

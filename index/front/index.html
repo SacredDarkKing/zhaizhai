@@ -248,7 +248,7 @@
                 <div class="divSubtract" v-if="setMealDialog.item.number > 0">
                     <img src="./images/subtract.png" @click="subtractCart(setMealDialog.item)"/>
                 </div>
-                <div class="divDishNum">{{setMealDialog.item.number}}</div>
+                <div class="divDishNum" v-if="setMealDialog.item.number > 0">{{setMealDialog.item.number}}</div>
                 <div class="divAdd" v-if="setMealDialog.item.number">
                     <img src="./images/add.png" @click="addCart(setMealDialog.item)"/>
                 </div>

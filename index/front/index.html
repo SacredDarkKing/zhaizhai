@@ -206,7 +206,7 @@
                     <div class="divSubtract" v-if="detailsDialog.item.number > 0">
                         <img src="./images/subtract.png" @click="subtractCart(detailsDialog.item)"/>
                     </div>
-                    <div class="divDishNum">{{detailsDialog.item.number}}</div>
+                    <div class="divDishNum" v-if="detailsDialog.item.number > 0">{{detailsDialog.item.number}}</div>
 
                     <div class="divAdd">
                         <img src="./images/add.png" @click="addCart(detailsDialog.item)"/>

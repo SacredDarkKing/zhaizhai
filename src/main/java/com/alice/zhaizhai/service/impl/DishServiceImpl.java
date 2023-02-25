@@ -76,7 +76,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     @Transactional
-    @CacheEvict(value = "dish", key = "#dish.categoryId")
+    @CacheEvict(value = "dish", key = "#dishDto.categoryId")
     public void saveWithFlavors(DishDto dishDto) {
         this.saveDish(dishDto);
         Long dishId = dishDto.getId();

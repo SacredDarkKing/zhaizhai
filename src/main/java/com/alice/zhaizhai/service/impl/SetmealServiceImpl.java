@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.plaf.TreeUI;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "setmeal", key = "#setmeal.categoryId")
+    @CacheEvict(value = "setmeal", key = "#setmealDto.categoryId")
     public void saveWithDishes(SetmealDto setmealDto) {
         this.saveSetmeal(setmealDto);
         Long setmealId = setmealDto.getId();
@@ -73,7 +74,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "setmeal", key = "#setmeal.categoryId")
+    @CacheEvict(value = "setmeal", key = "#setmealDto.categoryId")
     public void updateWihtDishes(SetmealDto setmealDto) {
         setmealMapper.update(setmealDto);
         Long setmealId = setmealDto.getId();

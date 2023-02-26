@@ -28,7 +28,7 @@ resultMap：自定义映射，用来处理多对一或者一对多的映射，
         select setmeal.*, category.name categoryName from setmeal, category where setmeal.category_id = category.id and
         is_deleted = 0
         <if test="name != null">
-            and name like concat('%', #{name}, '%')
+            and setmeal.name like concat('%', #{name}, '%')
         </if>
     </select>
 

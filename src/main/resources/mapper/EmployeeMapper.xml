@@ -19,7 +19,7 @@ resultMap：自定义映射，用来处理多对一或者一对多的映射，
     <select id="selectOneByUsername" resultType="employee">
         select *
         from employee
-        where username = #{username}
+        where username = #{username} and is_deleted = 0;
     </select>
 
     <!--void insert(Employee employee);-->

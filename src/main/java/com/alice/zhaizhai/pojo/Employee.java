@@ -28,6 +28,8 @@ public class Employee implements Serializable {
 
     private Integer status;
 
+    private Integer isDeleted;
+
     //转换为json的日期格式化
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

@@ -64,7 +64,7 @@ public class EmployeeController {
     @PostMapping
     public R<String> save(@RequestBody Employee employee, HttpServletRequest request) {
         //设置初始密码，并进行md5加密
-        String password = DigestUtils.md5DigestAsHex("123456".getBytes());
+        String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
         employee.setPassword(password);
 
         //获取当前用户id

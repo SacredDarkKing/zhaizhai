@@ -63,7 +63,7 @@ public class EmployeeController {
 
     @PostMapping
     public R<String> save(@RequestBody Employee employee, HttpServletRequest request) {
-        //设置初始密码，并进行md5加密
+        //设置密码，并进行md5加密
         String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
         employee.setPassword(password);
 
@@ -90,6 +90,10 @@ public class EmployeeController {
 
     @PutMapping
     public R<String> update(@RequestBody Employee employee, HttpServletRequest request) {
+        //设置密码，并进行md5加密
+        String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
+        employee.setPassword(password);
+        
         employee.createOrUpdate((Long) request.getSession().getAttribute("employee"));
         log.info("请求修改员工：{}", employee.toString());
         employeeService.update(employee);

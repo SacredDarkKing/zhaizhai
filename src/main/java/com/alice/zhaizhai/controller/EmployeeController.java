@@ -4,6 +4,7 @@ import com.alice.zhaizhai.common.MyPage;
 import com.alice.zhaizhai.common.R;
 import com.alice.zhaizhai.pojo.Employee;
 import com.alice.zhaizhai.service.EmployeeService;
+import com.github.pagehelper.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -91,9 +92,11 @@ public class EmployeeController {
     @PutMapping
     public R<String> update(@RequestBody Employee employee, HttpServletRequest request) {
         //设置密码，并进行md5加密
-        String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
-        employee.setPassword(password);
-        
+        if (StringUtil.isNotEmpty(employee.getPassword())) {
+            String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
+            employee.setPassword(password);
+        }
+
         employee.createOrUpdate((Long) request.getSession().getAttribute("employee"));
         log.info("请求修改员工：{}", employee.toString());
         employeeService.update(employee);

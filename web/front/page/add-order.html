@@ -26,7 +26,7 @@
             </div>
             <div class="divContent">
                 <div class="divAddress">
-                    <div @click="toAddressPage">                    
+                    <div @click="toAddressPage">
                         <div class="address">{{address.detail}}</div>
                         <div class="name">
                             <span>{{address.consignee}}{{address.sex === '1' ? '先生':'女士'}}</span>
@@ -90,7 +90,7 @@
         <!-- 引入组件库 -->
         <script src="../../backend/plugins/element-ui/index.js"></script>
         <!-- 引入vant样式 -->
-        <script src="./../js/vant.min.js"></script>      
+        <script src="./../js/vant.min.js"></script>
         <script src="./../api/address.js"></script>
         <!-- 引入axios -->
         <script src="../../backend/plugins/axios/axios.min.js"></script>
@@ -119,7 +119,7 @@
                     goodsNum(){
                         let num = 0
                         this.cartData.forEach(item=>{
-                            num += item.number 
+                            num += item.number
                         })
                         if(num <99){
                             return num
@@ -148,6 +148,8 @@
                         await this.defaultAddress()
                         //获取购物车的商品
                         await this.getCartData()
+                        //获取备注
+                        this.note = sessionStorage.getItem("remark")
                     },
                     //获取默认地址
                     async defaultAddress(){
@@ -175,6 +177,7 @@
                         this.finishTime = hour + ':' + minute
                     },
                     toAddressPage(){
+                        sessionStorage.setItem("remark", this.note);
                         window.requestAnimationFrame(()=>{
                             window.location.href = '/front/page/address.html'
                         })
@@ -194,6 +197,8 @@
                             payMethod:1,
                             addressBookId:this.address.id
                         }
+                        //清除备注
+                        sessionStorage.removeItem("remark")
                         const res = await addOrderApi(params)
                         if(res.code === 1){
                             window.requestAnimationFrame(()=>{

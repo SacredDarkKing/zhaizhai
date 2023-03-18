@@ -79,7 +79,7 @@
                 async cancelOrder() {
                     let res = await this.cancelRequest();
                     if (res.code === 1) {
-                        this.$notify({ type:'success', message:res.msg});
+                        this.$notify({ type:'success', message:"取消成功"});
                     } else {
                         this.$notify({ type:'warning', message:res.msg});
                     }

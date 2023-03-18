@@ -25,7 +25,7 @@ public interface SetmealService {
 
     void updateWihtDishes(SetmealDto setmealDto);
 
-    void updateStatusBatch(Integer status, List<Long> ids);
+    void updateStatusBatch(Integer status, List<Long> ids, Long empId);
 
     void deleteBatch(List<Long> ids);
 

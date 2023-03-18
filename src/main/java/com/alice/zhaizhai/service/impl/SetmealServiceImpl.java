@@ -16,7 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.plaf.TreeUI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -90,9 +90,11 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     @Transactional
     @CacheEvict(value = "setmeal", allEntries = true)
-    public void updateStatusBatch(Integer status, List<Long> ids) {
+    public void updateStatusBatch(Integer status, List<Long> ids, Long empId) {
         Setmeal setmeal = new Setmeal();
         setmeal.setStatus(status);
+        setmeal.setUpdateUser(empId);
+        setmeal.setUpdateTime(LocalDateTime.now());
 
         for (Long id : ids) {
             setmeal.setId(id);

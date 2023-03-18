@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -124,9 +125,11 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional
     @CacheEvict(value = {"dish", "setmeal"}, allEntries = true)
-    public void updateStatusBatch(Integer status, List<Long> ids) {
+    public void updateStatusBatch(Integer status, List<Long> ids, Long empId) {
         Dish dish = new Dish();
         dish.setStatus(status);
+        dish.setUpdateUser(empId);
+        dish.setUpdateTime(LocalDateTime.now());
 
         for (Long id : ids) {
             dish.setId(id);

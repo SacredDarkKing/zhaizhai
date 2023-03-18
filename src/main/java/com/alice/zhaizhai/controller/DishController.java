@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -64,8 +65,9 @@ public class DishController {
     }
 
     @PostMapping("/status/{st}")
-    public R<String> updateStatusBatch(@PathVariable("st") Integer status,@RequestParam List<Long> ids) {
-        dishService.updateStatusBatch(status, ids);
+    public R<String> updateStatusBatch(@PathVariable("st") Integer status, @RequestParam List<Long> ids, HttpSession session) {
+        Long empId = (Long)session.getAttribute("employee");
+        dishService.updateStatusBatch(status, ids, empId);
         return R.success("状态修改成功");
     }
 

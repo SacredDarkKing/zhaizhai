@@ -224,8 +224,8 @@ resultMap：自定义映射，用来处理多对一或者一对多的映射，
             <if test="createTime != null">
                 , create_time = #{createTime}
             </if>
-            <if test="createTime != null">
-                , update_time = #{createTime}
+            <if test="updateTime != null">
+                , update_time = #{updateTime}
             </if>
             <if test="createUser != null">
                 , create_user = #{createUser}

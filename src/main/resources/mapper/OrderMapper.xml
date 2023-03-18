@@ -101,5 +101,9 @@ resultMap：自定义映射，用来处理多对一或者一对多的映射，
 
     </update>
 
+<!--Order selectLatestOrderByUserId(Long userId);-->
+    <select id="selectLatestOrderByUserId" resultType="order">
+        select * from order_ where user_id = #{uid} order by order_time desc limit 0, 1
+    </select>
 
 </mapper>

@@ -30,12 +30,15 @@
                 <div class="divDesc">预计{{finishTime}}到达</div>
                 <div class="divDesc1">后厨正在加紧制作中，请耐心等待~</div>
                 <div class="btnView" @click="toOrderPage">查看订单</div>
+                <div class="btnCancel" @click="cancelOrder">取消订单</div>
             </div>
         </div>
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="../../backend/plugins/vue/vue.js"></script>
         <!-- 引入组件库 -->
         <script src="../../backend/plugins/element-ui/index.js"></script>
+        <!-- 引入vant样式 -->
+        <script src="./../js/vant.min.js"></script>
         <!-- 引入axios -->
         <script src="../../backend/plugins/axios/axios.min.js"></script>
         <script src="./../js/request.js"></script>
@@ -67,6 +70,20 @@
                     window.requestAnimationFrame(()=>{
                         window.location.replace('/front/index.html')
                     })  
+                },
+                async cancelRequest() {
+                    return $axios({url:'/order/cancel', method: 'put'})
+                },
+                async cancelOrder() {
+                    let res = await this.cancelRequest();
+                    if (res.code === 1) {
+                        this.$notify({ type:'success', message:res.msg});
+                        setTimeout(() => {
+                            this.toMainPage();
+                        }, 2000); // 延迟的时间设置为 2000 毫秒（即 2 秒）。这样就可以实现在提示信息消失后，再跳转到主页面的功能。
+                    } else {
+                        this.$notify({ type:'warning', message:res.msg});
+                    }
                 },
                 //获取送达时间
                 getFinishTime(){

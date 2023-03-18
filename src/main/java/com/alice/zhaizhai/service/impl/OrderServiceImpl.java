@@ -175,4 +175,21 @@ public class OrderServiceImpl implements OrderService {
         }
 
     }
+
+    @Override
+    @Transactional
+    public boolean cancelLatestOrder(Long userId) {
+        //获取最新订单
+        Order order =  orderMapper.selectLatestOrderByUserId(userId);
+
+        //更改订单状态为5
+        if (order.getStatus() != 2){
+            //不是2，表示不是待派送状态，无法取消
+            return false;
+        }
+        order.setStatus(5);
+        this.update(order);
+
+        return true;
+    }
 }

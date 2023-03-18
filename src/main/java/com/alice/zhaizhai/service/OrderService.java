@@ -18,4 +18,6 @@ public interface OrderService {
     void update(Order order);
 
     void again(Order order);
+
+    boolean cancelLatestOrder(Long userId);
 }

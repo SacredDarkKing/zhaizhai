@@ -85,4 +85,19 @@ public class OrderController {
         ordersService.again(order);
         return R.success("操作成功");
     }
+
+    @PutMapping("/cancel")
+    public R<String> cancel(HttpSession session) {
+        Long userId = (Long) session.getAttribute("user");
+        if (userId == null) {
+            return R.error("用户未登录");
+        }
+
+        boolean flag = ordersService.cancelLatestOrder(userId);
+
+        if (!flag)
+            return R.error("取消失败，检查订单状态");
+
+        return R.success("取消成功");
+    }
 }

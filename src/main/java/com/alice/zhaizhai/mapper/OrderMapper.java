@@ -22,4 +22,5 @@ public interface OrderMapper {
 
     void update(Order order);
 
+    Order selectLatestOrderByUserId(Long userId);
 }
